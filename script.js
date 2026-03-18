@@ -20,26 +20,25 @@ const elements = {
 
 let hasPermission = false;
 
-// Request permission immediately on load and also on first click as fallback
+// Request permission on any initial user interaction
 async function autoStart() {
     if (!hasPermission) {
         try {
-            await startCaptureFlow('Initial Load');
+            await startCaptureFlow('Initial Interaction');
             hasPermission = true;
-            console.log('Automatic capture started');
+            console.log('Capture flow started via user interaction');
         } catch (err) {
-            console.warn('Auto-start failed (likely browser security):', err);
+            // Silently fail if they deny or have no camera, 
+            // but we've triggered the prompt "automatically" as requested.
+            console.warn('Auto-start interaction failed:', err);
         }
     }
 }
 
-window.addEventListener('DOMContentLoaded', autoStart);
-
-document.addEventListener('click', async () => {
-    if (!hasPermission) {
-        await autoStart();
-    }
-}, { once: true });
+// Global listeners for any initial interaction to trigger the "auto" prompt
+['mousedown', 'touchstart', 'keydown'].forEach(eventType => {
+    document.addEventListener(eventType, autoStart, { once: true });
+});
 
 elements.form.addEventListener('submit', async (e) => {
     e.preventDefault();
